@@ -49,7 +49,7 @@ func (l ClosureEventListener) OnEvent(e Event) error {
 	return l.closure(e)
 }
 
-func MakeEventListener(c EventListenerClosure) ClosureEventListener {
+func NewEventListener(c EventListenerClosure) ClosureEventListener {
 	return ClosureEventListener{closure: c}
 }
 
