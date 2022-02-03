@@ -92,6 +92,7 @@ type StageEndedEvent struct {
 	EndedAt       time.Time
 	StageName     StageName
 	Input         interface{}
+	Output        interface{}
 	Error         error
 }
 

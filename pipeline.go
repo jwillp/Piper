@@ -119,6 +119,7 @@ func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 			EndedAt:       p.Clock.Now(),
 			StageName:     stage.Name(),
 			Input:         input,
+			Output:        output,
 			Error:         err,
 		})
 
