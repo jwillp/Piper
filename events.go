@@ -92,6 +92,7 @@ type StageEndedEvent struct {
 	EndedAt       time.Time
 	StageName     StageName
 	Input         interface{}
+	Error         error
 }
 
 func (e StageEndedEvent) isEvent() {}
