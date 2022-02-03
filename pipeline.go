@@ -109,19 +109,19 @@ func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 		}
 
 		//goland:noinspection GoDeferInLoop
-		defer func(p *Pipeline, e Event) {
-			if dispatchError := p.notifyListeners(e); dispatchError != nil {
+		defer func(p *Pipeline) {
+			if dispatchError := p.notifyListeners(StageEndedEvent{
+				Configuration: p.Configuration,
+				StartedAt:     stageStartedAt,
+				EndedAt:       p.Clock.Now(),
+				StageName:     stage.Name(),
+				Input:         input,
+				Output:        output,
+				Error:         err,
+			}); dispatchError != nil {
 				err = dispatchError
 			}
-		}(p, StageEndedEvent{
-			Configuration: p.Configuration,
-			StartedAt:     stageStartedAt,
-			EndedAt:       p.Clock.Now(),
-			StageName:     stage.Name(),
-			Input:         input,
-			Output:        output,
-			Error:         err,
-		})
+		}(p)
 
 		if out, err := stage.Run(input); err != nil {
 			return nil, err
