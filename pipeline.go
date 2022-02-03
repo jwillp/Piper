@@ -27,7 +27,6 @@ type Stage interface {
 
 // StageInput Represents an Input to a stage.
 type StageInput interface {
-	isInput()
 }
 
 // StageOutput Represents an Output of a Stage.

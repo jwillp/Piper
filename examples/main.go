@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jwillp/Piper.git"
+	"github.com/jwillp/Piper"
 )
 
 type LintingOutput struct {
