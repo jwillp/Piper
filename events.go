@@ -70,7 +70,7 @@ type PipelineEndedEvent struct {
 	StartedAt     time.Time
 	EndedAt       time.Time
 	StageNames    []StageName
-	Output        StageOutput
+	Output        interface{}
 	Error         error
 	LastStageName StageName
 }
@@ -81,7 +81,7 @@ type StageStartedEvent struct {
 	Configuration Configuration
 	StartedAt     time.Time
 	StageName     StageName
-	Input         StageInput
+	Input         interface{}
 }
 
 func (e StageStartedEvent) isEvent() {}
@@ -91,7 +91,7 @@ type StageEndedEvent struct {
 	StartedAt     time.Time
 	EndedAt       time.Time
 	StageName     StageName
-	Input         StageInput
+	Input         interface{}
 }
 
 func (e StageEndedEvent) isEvent() {}

@@ -22,16 +22,7 @@ type StageName string
 type Stage interface {
 	Name() StageName
 
-	Run(i StageInput) (StageOutput, error)
-}
-
-// StageInput Represents an Input to a stage.
-type StageInput interface {
-}
-
-// StageOutput Represents an Output of a Stage.
-type StageOutput interface {
-	StageInput
+	Run(i interface{}) (interface{}, error)
 }
 
 // Pipeline Service responsible for the execution of a Pipeline.
@@ -79,9 +70,9 @@ func (p *Pipeline) WithStages(s ...Stage) *Pipeline {
 	return p
 }
 
-func (p *Pipeline) Run(input StageInput) (o StageOutput, err error) {
+func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 
-	var output StageOutput
+	var output interface{}
 
 	pipelineStartedAt := p.Clock.Now()
 

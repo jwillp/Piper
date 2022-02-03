@@ -1,6 +1,6 @@
 package Piper
 
-type ClosureStageClosure func(input StageInput) (StageOutput, error)
+type ClosureStageClosure func(input interface{}) (interface{}, error)
 
 // ClosureStage allows defining a stage using a closure.
 type ClosureStage struct {
@@ -16,7 +16,7 @@ func (s ClosureStage) Name() StageName {
 	return s.name
 }
 
-func (s ClosureStage) Run(input StageInput) (StageOutput, error) {
+func (s ClosureStage) Run(input interface{}) (interface{}, error) {
 	return s.closure(input)
 }
 
@@ -34,6 +34,6 @@ func (p PipelineStage) Name() StageName {
 	return p.name
 }
 
-func (p PipelineStage) Run(input StageInput) (StageOutput, error) {
+func (p PipelineStage) Run(input interface{}) (interface{}, error) {
 	return p.pipeline.Run(input)
 }
