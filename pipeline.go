@@ -150,7 +150,7 @@ func (p *Pipeline) stageNames() []StageName {
 type LoggerEventListener struct {
 }
 
-func (l LoggerEventListener) onEvent(e Event) error {
+func (l LoggerEventListener) OnEvent(e Event) error {
 	fmt.Printf("%T", e)
 	fmt.Println()
 

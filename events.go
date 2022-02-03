@@ -6,11 +6,11 @@ type EventTypeName string
 
 // Event Marker interface for events
 type Event interface {
-	isEvent()
+	IsEvent()
 }
 
 type EventListener interface {
-	onEvent(e Event) error
+	OnEvent(e Event) error
 }
 
 type EventPublisher struct {
@@ -31,7 +31,7 @@ func (b *EventPublisher) AddListener(l EventListener) {
 func (b *EventPublisher) Publish(e Event) error {
 
 	for _, listener := range b.listeners {
-		if err := listener.onEvent(e); err != nil {
+		if err := listener.OnEvent(e); err != nil {
 			return err
 		}
 	}
@@ -45,7 +45,7 @@ type ClosureEventListener struct {
 	closure EventListenerClosure
 }
 
-func (l ClosureEventListener) onEvent(e Event) error {
+func (l ClosureEventListener) OnEvent(e Event) error {
 	return l.closure(e)
 }
 
@@ -62,7 +62,7 @@ type PipelineStartedEvent struct {
 	Configuration Configuration
 }
 
-func (e PipelineStartedEvent) isEvent() {}
+func (e PipelineStartedEvent) IsEvent() {}
 
 //goland:noinspection GoNameStartsWithPackageName
 type PipelineEndedEvent struct {
@@ -75,7 +75,7 @@ type PipelineEndedEvent struct {
 	LastStageName StageName
 }
 
-func (e PipelineEndedEvent) isEvent() {}
+func (e PipelineEndedEvent) IsEvent() {}
 
 type StageStartedEvent struct {
 	Configuration Configuration
@@ -84,7 +84,7 @@ type StageStartedEvent struct {
 	Input         interface{}
 }
 
-func (e StageStartedEvent) isEvent() {}
+func (e StageStartedEvent) IsEvent() {}
 
 type StageEndedEvent struct {
 	Configuration Configuration
@@ -96,4 +96,4 @@ type StageEndedEvent struct {
 	Error         error
 }
 
-func (e StageEndedEvent) isEvent() {}
+func (e StageEndedEvent) IsEvent() {}
