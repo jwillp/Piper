@@ -39,18 +39,18 @@ func (b *EventPublisher) Publish(e Event) error {
 	return nil
 }
 
-type MultiEventListener struct {
-	Listeners []EventListener
+type EventListenerClosure func(e Event) error
+
+type ClosureEventListener struct {
+	closure EventListenerClosure
 }
 
-func (m MultiEventListener) onEvent(e Event) error {
-	for _, listener := range m.Listeners {
-		if err := listener.onEvent(e); err != nil {
-			return err
-		}
-	}
+func (l ClosureEventListener) onEvent(e Event) error {
+	return l.closure(e)
+}
 
-	return nil
+func MakeEventListener(c EventListenerClosure) ClosureEventListener {
+	return ClosureEventListener{closure: c}
 }
 
 // EVENTS
