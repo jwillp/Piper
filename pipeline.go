@@ -5,16 +5,6 @@ import (
 	"github.com/benbjohnson/clock"
 )
 
-// Configuration Configuration of an Pipeline.
-type Configuration interface {
-	isConfiguration()
-}
-
-type EmptyConfiguration struct {
-}
-
-func (c EmptyConfiguration) isConfiguration() {}
-
 // StageName Name of a Stage
 type StageName string
 
@@ -27,7 +17,6 @@ type Stage interface {
 
 // Pipeline Service responsible for the execution of a Pipeline.
 type Pipeline struct {
-	Configuration  Configuration
 	Stages         []Stage
 	EventPublisher *EventPublisher
 	Clock          clock.Clock
@@ -35,19 +24,12 @@ type Pipeline struct {
 
 func NewPipeline() *Pipeline {
 	return &Pipeline{
-		EmptyConfiguration{},
 		[]Stage{},
 		&EventPublisher{
 			listeners: []EventListener{},
 		},
 		clock.New(),
 	}
-}
-
-func (p *Pipeline) WithConfiguration(c Configuration) *Pipeline {
-	p.Configuration = c
-
-	return p
 }
 
 func (p *Pipeline) UsingEventPublisher(ep *EventPublisher) *Pipeline {
@@ -77,19 +59,17 @@ func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 	pipelineStartedAt := p.Clock.Now()
 
 	if err := p.notifyListeners(PipelineStartedEvent{
-		StartedAt:     pipelineStartedAt,
-		StageNames:    p.stageNames(),
-		Configuration: p.Configuration,
+		StartedAt:  pipelineStartedAt,
+		StageNames: p.stageNames(),
 	}); err != nil {
 		return nil, err
 	}
 
 	defer func(p *Pipeline) {
 		if dispatchError := p.notifyListeners(PipelineEndedEvent{
-			StartedAt:     pipelineStartedAt,
-			EndedAt:       p.Clock.Now(),
-			StageNames:    p.stageNames(),
-			Configuration: p.Configuration,
+			StartedAt:  pipelineStartedAt,
+			EndedAt:    p.Clock.Now(),
+			StageNames: p.stageNames(),
 		}); dispatchError != nil {
 			err = dispatchError
 		}
@@ -100,10 +80,9 @@ func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 		stageStartedAt := p.Clock.Now()
 
 		if err := p.notifyListeners(StageStartedEvent{
-			Configuration: p.Configuration,
-			StartedAt:     pipelineStartedAt,
-			StageName:     stage.Name(),
-			Input:         input,
+			StartedAt: pipelineStartedAt,
+			StageName: stage.Name(),
+			Input:     input,
 		}); err != nil {
 			return nil, err
 		}
@@ -112,13 +91,12 @@ func (p *Pipeline) Run(input interface{}) (o interface{}, err error) {
 		output, err := stage.Run(input)
 
 		if dispatchError := p.notifyListeners(StageEndedEvent{
-			Configuration: p.Configuration,
-			StartedAt:     stageStartedAt,
-			EndedAt:       p.Clock.Now(),
-			StageName:     stage.Name(),
-			Input:         input,
-			Output:        output,
-			Error:         err,
+			StartedAt: stageStartedAt,
+			EndedAt:   p.Clock.Now(),
+			StageName: stage.Name(),
+			Input:     input,
+			Output:    output,
+			Error:     err,
 		}); dispatchError != nil {
 			return nil, dispatchError
 		}

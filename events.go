@@ -57,16 +57,14 @@ func NewEventListener(c EventListenerClosure) ClosureEventListener {
 
 //goland:noinspection GoNameStartsWithPackageName
 type PipelineStartedEvent struct {
-	StartedAt     time.Time
-	StageNames    []StageName
-	Configuration Configuration
+	StartedAt  time.Time
+	StageNames []StageName
 }
 
 func (e PipelineStartedEvent) IsEvent() {}
 
 //goland:noinspection GoNameStartsWithPackageName
 type PipelineEndedEvent struct {
-	Configuration Configuration
 	StartedAt     time.Time
 	EndedAt       time.Time
 	StageNames    []StageName
@@ -78,22 +76,20 @@ type PipelineEndedEvent struct {
 func (e PipelineEndedEvent) IsEvent() {}
 
 type StageStartedEvent struct {
-	Configuration Configuration
-	StartedAt     time.Time
-	StageName     StageName
-	Input         interface{}
+	StartedAt time.Time
+	StageName StageName
+	Input     interface{}
 }
 
 func (e StageStartedEvent) IsEvent() {}
 
 type StageEndedEvent struct {
-	Configuration Configuration
-	StartedAt     time.Time
-	EndedAt       time.Time
-	StageName     StageName
-	Input         interface{}
-	Output        interface{}
-	Error         error
+	StartedAt time.Time
+	EndedAt   time.Time
+	StageName StageName
+	Input     interface{}
+	Output    interface{}
+	Error     error
 }
 
 func (e StageEndedEvent) IsEvent() {}
